@@ -1,0 +1,255 @@
+﻿/* CSS Document */
+
+html, body
+{
+	height: 100%;
+	width: 100%;
+	margin: 0;
+}
+#map_canvas { /* Must bigger size than 100x100 pixels */
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+button {
+  padding: .5em;
+  margin: .5em;
+}
+#Length, #Times, #Company {
+    position: relative;
+    margin-left: 3%;
+    padding: 2%;
+    float: left;
+    clear: both;
+    background-color: rgba(255, 255, 255, 0.6);
+    font-size: 11px;
+    -webkit-box-shadow: 10px 10px 5px -10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 5px -10px rgba(0,0,0,0.75);
+    box-shadow: 10px 10px 5px -10px rgba(0,0,0,0.75);
+}
+
+#Length {
+    margin-top: 1vh;
+    width: 16%;
+    text-align: right;
+}
+
+#Times {
+    margin-top: 1vh;
+    width: 16%;
+    text-align: right;
+}
+
+.Time {
+    min-height: 20px;
+    clear: both;
+}
+
+.Timehmin {
+    position: relative;
+    top: 50%;
+    transform: translateY(25%);
+}
+
+.speedimg {
+    height: 20px;
+    width: auto;
+    float: left;
+}
+
+#Company {
+    width: 20%;
+    margin-top: 13vh;
+}
+
+#Logo {
+    height: 35px;
+    width: auto;
+    float: left;
+}
+
+#Logotext {
+    font-family: Garamond, Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 1vh;
+    text-align: right;
+}
+
+
+
+
+
+
+.controls {
+    margin-top: 10px;
+    border: 1px solid transparent;
+    border-radius: 2px 0 0 2px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 32px;
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    z-index: 500;
+}
+
+#menu_handler {
+    position: absolute;
+    bottom: 30px;
+    left: 3%;
+    z-index: 1001;
+}
+
+.togglesymbol {
+    -webkit-transition: all 0.5s cubic-bezier(.55,.09,.68,.53);
+    -moz-transition: all 0.5s cubic-bezier(.55,.09,.68,.53);
+    -o-transition: all 0.5s cubic-bezier(.55,.09,.68,.53);
+    transition: all 0.5s cubic-bezier(.55,.09,.68,.53);
+    color: #FFF;
+    font-size: 60px;
+    width: auto;
+    height: 30px;
+    background-color: rgba(255,255,255,0.9);
+    background-image: url("../img/back.png");
+    background-size: cover;
+    padding: 15px;
+}
+
+.menu_wrapper {
+    -webkit-transition: all 0.4s cubic-bezier(.55,.09,.68,.53);
+    -moz-transition: all 0.4s cubic-bezier(.55,.09,.68,.53);
+    -o-transition: all 0.4s cubic-bezier(.55,.09,.68,.53);
+    transition: all 0.4s cubic-bezier(.55,.09,.68,.53);
+    position: absolute;
+    top: 10%;
+    right: 5%;
+    left: 5%;
+    bottom: 5%;
+    width: 90%;
+    overflow: scroll;
+    text-align: center;
+    z-index: 999;
+    visibility: visible;
+    border-radius: 10px;
+    background-color: rgba(255,255,255,0.9);
+    display: inline-block;
+}
+
+#menu {
+    position: relative;
+    margin: 5%;
+    height: auto;
+    z-index: 1000;
+    font-size: 11px;;
+}
+
+.control {
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+/* Slider */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 20px;
+}
+
+    .switch input {
+        display: none;
+    }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+
+
+.transform_menu {
+    position: absolute;
+    top: 91%;
+    right: 93%;
+    bottom: 9%;
+    left: 7%;
+    width: 0px;
+    z-index: 0;
+    visibility: hidden;
+    border-radius: 100px;
+    background-color: rgba(255,255,255,0);
+    display: none;
+}
+
+.transform_toggle {
+    background-color: rgba(255,255,255,0.8);
+    background-size: 0px;
+    padding: 1px;
+    border-radius: 5px;
+}
+
+.controls_symbol {
+    width: 30px;
+    height: auto;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.menu {
+    width: 45%;
+    height: auto;
+    margin: auto;
+}

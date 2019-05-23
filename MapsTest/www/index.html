@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width">
+    <!-- CSS Style Allgemein-->
+            <link rel="stylesheet" type="text/css" href="css/base.css">
+    <!-- JS Cordova -->
+    	<script type="text/javascript" src="cordova.js"></script>
+	<!-- JS Google API (Routes, Places) -->
+		<script type="text/javascript" charset="utf-8"
+                src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyA5Hq3_BroM3lmlO61UeiDK7yfWFLiDwRE&libraries=places,visualization,geometry"></script>
+    <!-- JS DeviceReady -->
+        <script type="text/javascript" src="js/DeviceReady.js"></script>
+  </head>
+  <body>
+      <div id="map_canvas">
+          <!--<button id="button">Click me!</button>-->
+          <span id="Company"></span>
+          <span id="Length"></span>
+          <span id="Times"></span>
+          <span id="label"></span>
+          <span id="RouteInfo"></span>
+          <!-- Menu Ingame -->
+          <span id="menu_handler"><img class="togglesymbol controls transform_toggle" src="img/map/controls/options.png" alt="&#9660;"></span>
+
+          <span class="menu_wrapper transform_menu">
+              <span id="menu">
+                  <h2>Settings</h2>
+                  <br style="clear:both;"><br>
+                  <!-- Map Options -->
+                  <span id="map_options">
+                      <span class="left control">
+                          <img class="controls_symbol" src="img/map/controls/compass.png" alt="Compass">
+                          <br>
+                          <label class="switch" for="Compass">
+                              <input id="Compass" name="Compass" type="checkbox" onchange="set_map_options()" checked>
+                              <span class="slider round"></span>
+                              <br>
+                              <p>Compass</p>
+                          </label>
+                      </span>
+                      <span class="right control">
+                          <img class="controls_symbol" src="img/map/controls/mylocation.png" alt="MyLocation">
+                          <br>
+                          <label class="switch" for="MyLocation">
+                              <input id="MyLocation" name="MyLocation" type="checkbox" onchange="set_map_options()" checked>
+                              <span class="slider round"></span>
+                              <br>
+                              <p>Location</p>
+                          </label>
+                      </span>
+                      <br style="clear:both;">
+
+                      <!-- Map Style -->                      
+                      <span style="text-align: center;">
+                          <img class="controls_symbol" src="img/map/controls/map.png" alt="Map">
+                      </span>
+                          <br>
+                          <label for="maptype">
+                              <select id="maptype" name="maptype" onchange="set_map_options()">
+                                  <option value="ROADMAP">Roadmap</option>
+                                  <option value="SATELLITE">Satellite</option>
+                                  <option value="HYBRID">Hybrid</option>
+                                  <option value="TERRAIN">Terrain</option>
+                                  <option value="NONE">None</option>
+                              </select>
+                              <p>Map Type</p>
+                          </label>
+                          <br style="clear:both;">
+
+                          <span class="right control">
+                              <img class="controls_symbol" src="img/map/controls/zoom.png" alt="Zoom">
+                              <br>                              
+                              <label class="switch" for="Zoom">
+                                  <input id="Zoom" name="Zoom" type="checkbox" onchange="set_map_options()" checked">
+                                  <span class="slider round"></span>                                  
+                              </label>
+                              <p>Zoom</p>
+                          </span>
+                      </span>
+              </span>
+          </span>
+                  <br style="clear:both;">
+
+          <script>
+              // Menu Toogle
+              (function () {
+                  // hasClass
+                  function hasClass(elem, className) {
+                      return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
+                  }
+                  // toggleClass
+                  function toggleClass(elem, className) {
+                      var newClass = ' ' + elem.className.replace(/[\t\r\n]/g, ' ') + ' ';
+                      if (hasClass(elem, className)) {
+                          while (newClass.indexOf(' ' + className + ' ') >= 0) {
+                              newClass = newClass.replace(' ' + className + ' ', ' ');
+                          }
+                          elem.className = newClass.replace(/^\s+|\s+$/g, '');
+                      } else {
+                          elem.className += ' ' + className;
+                      }
+                  }
+                  // Mobile nav function
+                  var mobileNav = document.querySelector('.togglesymbol');
+                  var toggle = document.querySelector('.menu_wrapper');
+                  mobileNav.onclick = function () {
+                      toggleClass(this, 'transform_toggle');
+                      toggleClass(toggle, 'transform_menu');
+                  };
+              })();
+          </script>
+
+      </div>
+      </body>
+    </html>
