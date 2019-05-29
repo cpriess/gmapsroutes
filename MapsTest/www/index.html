@@ -15,6 +15,11 @@
   <body>
       <div id="map_canvas">
           <!--<button id="button">Click me!</button>-->
+
+          <span class="smallPanel">
+              Rotation: 0.0&nbsp;<input id="rotationRange" type="range" min="0" max="360" step="10" value="0">&nbsp;360
+          </span>
+
           <span id="Company"></span>
           <span id="Length"></span>
           <span id="Times"></span>
@@ -51,36 +56,36 @@
                       </span>
                       <br style="clear:both;">
 
-                      <!-- Map Style -->                      
+                      <!-- Map Style -->
                       <span style="text-align: center;">
                           <img class="controls_symbol" src="img/map/controls/map.png" alt="Map">
                       </span>
-                          <br>
-                          <label for="maptype">
-                              <select id="maptype" name="maptype" onchange="set_map_options()">
-                                  <option value="ROADMAP">Roadmap</option>
-                                  <option value="SATELLITE">Satellite</option>
-                                  <option value="HYBRID">Hybrid</option>
-                                  <option value="TERRAIN">Terrain</option>
-                                  <option value="NONE">None</option>
-                              </select>
-                              <p>Map Type</p>
-                          </label>
-                          <br style="clear:both;">
+                      <br>
+                      <label for="maptype">
+                          <select id="maptype" name="maptype" onchange="set_map_options()">
+                              <option value="ROADMAP">Roadmap</option>
+                              <option value="SATELLITE">Satellite</option>
+                              <option value="HYBRID">Hybrid</option>
+                              <option value="TERRAIN">Terrain</option>
+                              <option value="NONE">None</option>
+                          </select>
+                          <p>Map Type</p>
+                      </label>
+                      <br style="clear:both;">
 
-                          <span class="right control">
-                              <img class="controls_symbol" src="img/map/controls/zoom.png" alt="Zoom">
-                              <br>                              
-                              <label class="switch" for="Zoom">
-                                  <input id="Zoom" name="Zoom" type="checkbox" onchange="set_map_options()" checked">
-                                  <span class="slider round"></span>                                  
-                              </label>
-                              <p>Zoom</p>
-                          </span>
+                      <span class="right control">
+                          <img class="controls_symbol" src="img/map/controls/zoom.png" alt="Zoom">
+                          <br>
+                          <label class="switch" for="Zoom">
+                              <input id="Zoom" name="Zoom" type="checkbox" onchange="set_map_options()" checked">
+                              <span class="slider round"></span>
+                          </label>
+                          <p>Zoom</p>
                       </span>
+                  </span>
               </span>
           </span>
-                  <br style="clear:both;">
+          <br style="clear:both;">
 
           <script>
               // Menu Toogle

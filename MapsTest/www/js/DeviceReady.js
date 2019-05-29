@@ -42,6 +42,13 @@ var redicon = {
 var blueicon = {
     url: "img/blue.png"
 };
+var arrowicon = {
+    url: "img/arrows/arrow2.png",
+    size: {
+        width: 18,
+        height: 18
+    }
+};
 
 
 
@@ -121,7 +128,7 @@ document.addEventListener("deviceready", function() {
             } else {
                 this.setDraggable(false);
                 this.setZIndex(1);
-                this.setIcon(blueicon);
+                this.setIcon(arrowicon);
                 this.removeEventListener(plugin.google.maps.event.MARKER_CLICK, parent.openInfoWindow);
                 this.removeEventListener(plugin.google.maps.event.MARKER_DRAG_START, parent.onMarkerDragStart);
                 this.removeEventListener(plugin.google.maps.event.MARKER_DRAG_END, parent.onMarkerDragEnd);
@@ -142,8 +149,12 @@ document.addEventListener("deviceready", function() {
         parent.get("mvcArray").setAt(name, position);
         // this.set("isactive", false);
         this.setPosition(position);
+
         Polylines[index].points[name] = position; // evtl unnötig wegen mvc array?
         PolylinesData[index].points[name] = position;
+
+        // Rotate Icon
+        this.setRotation(GetInteractableClusterMarkerRotation(position, this.get("parent").get("pointsaround").getPointBehindMarker(this)));
 
         setTimeout(function () {
             var leng = CalculateRoutesLength();
@@ -164,6 +175,7 @@ document.addEventListener("deviceready", function() {
     InteractableClusterMarker.prototype.updatePolylength = function() {
         var index = this.get("index");
         var name = this.get('marker').get("name");
+
         var PolyAtPoint = PolylinesData[index].points.slice(name - 1, name + 2);
         var LengthAtPoint = plugin.google.maps.geometry.spherical.computeLength(PolyAtPoint);
         var length = this.get("LenghtBeforePoint") + LengthAtPoint + this.get("LenghtBehindPoint");
@@ -175,6 +187,7 @@ document.addEventListener("deviceready", function() {
     InteractableClusterMarker.prototype.setPolysAtPoint = function() {
         var index = this.get("index");
         var name = this.get('marker').get("name");
+
         var PolyBeforePoint = PolylinesData[index].points.slice(0, name);
         var LengthPolyBeforePoint = plugin.google.maps.geometry.spherical.computeLength(PolyBeforePoint);
         this.set("LenghtBeforePoint", LengthPolyBeforePoint);
@@ -366,7 +379,7 @@ document.addEventListener("deviceready", function() {
 				AddPointBehindMarker(this.get("marker").get("parent").get("index"), this.get("marker").get("name"));
             });
         });
-		this.set("pointbehind",PointBehind );
+		this.set("pointbehind",PointBehind);
 		
         var posbefore = this.getPointBeforeMarker(ClusterMarker);
         var PointBefore = map.addMarker({
@@ -532,6 +545,49 @@ document.addEventListener("deviceready", function() {
 		
         // Set Routes
         setRoutes();
+
+        ////////////////////// Rotation
+
+        var positions = [
+            { "lat": 0, "lng": 0 },
+            { "lat": 10, "lng": -10 }
+        ];
+
+        // Add a marker
+        var basemarker = map.addMarker({
+            'position': positions[0],
+            'icon': arrowicon
+        });
+
+        var range = document.getElementById("rotationRange");
+        range.addEventListener("change", function () {
+
+            // Set the marker rotation angle.
+            basemarker.setRotation(parseInt(this.value));
+        });
+
+        // Set the current value as rotation angle.
+        basemarker.setRotation(range.value);
+
+        //////////////////////////////////////
+
+        // Draggable Marker
+        var draggableMarker = map.addMarker({
+            'position': positions[1],
+            'draggable': true,
+            'title': "Drag me!"
+        });
+        draggableMarker.showInfoWindow();
+
+        draggableMarker.on("position_changed", function (oldPosition, newPosition) {
+            // Calculate the heading
+            var heading = plugin.google.maps.geometry.spherical.computeHeading(basemarker.getPosition(), newPosition);
+            basemarker.setRotation(heading + 90);
+            basemarker.setIconAnchor(10, 10);
+        });
+
+        //////////////////////////////////////////
+
     });
 
     // Button
@@ -650,7 +706,7 @@ document.addEventListener("deviceready", function() {
 
             var PolylineMarkerCluster = [];
             for (i = 0; i < polypoints.length; i++) {
-                PolylineMarkerCluster[i] = NewPolylineMarkerClusterData(i, polypoints[i].lat, polypoints[i].lng);
+                PolylineMarkerCluster[i] = NewPolylineMarkerClusterData(index, i, polypoints);
             }
             // alert(polypoints.length + " Punkte");
 
@@ -710,6 +766,7 @@ document.addEventListener("deviceready", function() {
                 }
                 ]
             }, function (cluster) {
+
                 PolylineCluster[index] = cluster;
                 PolylineClusterMarkers[index] = [];
                 InteractableClusterMarkers[index] = [];
@@ -871,23 +928,45 @@ document.addEventListener("deviceready", function() {
         */
     }
 
-    function NewPolylineMarkerClusterData(i, lat, lng) {
+    function NewPolylineMarkerClusterData(index, i, polypoints) {
         // var active = false;
         // if(ActiveMarkerName != null && ActiveMarkerName == i) { active = true; }
         return {
             "position": {
-                "lat": lat,
-                "lng": lng
+                "lat": polypoints[i].lat,
+                "lng": polypoints[i].lng
             },
             "zIndex": 1,
             "name": i,
-            "address": "Adress",
-            "phone": "Phone",
-            "icon": "img/blue.png",
+            "icon": arrowicon,
+            /*
+            "anchor": {
+                "x": 9,
+                "y": 9
+            },
+            */
+            "flat": true,
+            "rotation": GetClusterMarkerRotation(i, polypoints),
             "draggable": false,
             "isactive": false,
             "disableAutoPan": true
         };
+    }
+
+    function GetInteractableClusterMarkerRotation(basepos, pos)
+    {
+        var rot = 0;
+        rot = 90 + plugin.google.maps.geometry.spherical.computeHeading(basepos, pos);
+        return rot;
+    }
+
+    function GetClusterMarkerRotation(i, polypoints)
+    {
+        var rot = 0;
+        if (i < polypoints.length - 1) rot = 90 + plugin.google.maps.geometry.spherical.computeHeading({"lat": polypoints[i].lat,"lng": polypoints[i].lng}, {"lat": polypoints[i+1].lat,"lng": polypoints[i+1].lng});
+        // last point
+        else rot = 0;
+        return rot;
     }
 
     /*	
