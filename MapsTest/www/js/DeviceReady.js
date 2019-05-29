@@ -625,8 +625,7 @@ document.addEventListener("deviceready", function() {
                         var decodedPath = plugin.google.maps.geometry.encoding.decodePath(encodedPath, precision);
                         var optimizedPath = [];
                         var calcPoints = [];
-                        for (var i = 0; i < decodedPath.length; i++)
-                        {
+                        for (var i = 0; i < decodedPath.length; i++) {
                             if (optimizedPath.length > 0) {
                                 if (i + 1 < decodedPath.length) {
                                     calcPoints = [];
@@ -637,13 +636,11 @@ document.addEventListener("deviceready", function() {
                                         optimizedPath[optimizedPath.length] = decodedPath[i];
                                     }
                                 }
-                                else
-                                {
+                                else {
                                     optimizedPath[optimizedPath.length] = decodedPath[i];
                                 }
                             }
-                            else
-                            {
+                            else {
                                 optimizedPath[0] = decodedPath[0];
                             }
                         }
@@ -822,14 +819,18 @@ document.addEventListener("deviceready", function() {
                     Starts[index] = marker;
 
                     marker.on(plugin.google.maps.event.MARKER_DRAG_END, function (position) {
-                        startLoc[index] = position.lat + "," + position.lng;
-                        UpdateRouteRequest(index, startLoc[index], endLoc[index]);
-                        if (index > 0) {
-                            endLoc[index - 1] = startLoc[index];
-                            UpdateRouteRequest(index - 1, startLoc[index - 1], endLoc[index - 1]);
-                        }
-                        
-                        setRoutes();
+                        setTimeout(function () {
+                            //startLoc[index] = position.lat + "," + position.lng;
+                            UpdateRouteRequest(index, position.lat + "," + position.lng, endLoc[index]);
+                            if (index > 0) {
+                                //endLoc[index - 1] = startLoc[index];
+                                UpdateRouteRequest(index - 1, startLoc[index - 1], position.lat + "," + position.lng);
+                            }
+
+                            setTimeout(function () {
+                                setRoutes();
+                            }, 250);
+                        }, 200);
                     });
 
 
@@ -888,9 +889,13 @@ document.addEventListener("deviceready", function() {
                     }, function (marker) {
                         Ends[index] = marker;
                         marker.on(plugin.google.maps.event.MARKER_DRAG_END, function (position) {
-                            endLoc[index] = position.lat + "," + position.lng;
-                            UpdateRouteRequest(index, startLoc[index], endLoc[index]);
-                            setRoutes();
+                            setTimeout(function () {
+                                endLoc[index] = position.lat + "," + position.lng;
+                                UpdateRouteRequest(index, startLoc[index], endLoc[index]);
+                                setTimeout(function () {
+                                    setRoutes();
+                                }, 250);
+                            }, 200);
                         });
                     });
                 }
@@ -969,7 +974,7 @@ document.addEventListener("deviceready", function() {
         setTimeout(function () {
             var leng = CalculateRoutesLength();
             ShowRoutesLength(leng);
-        }, 25);
+        }, 500);
 
         /*
         var intervalTimings = 1;
@@ -1062,10 +1067,11 @@ document.addEventListener("deviceready", function() {
         if (startLoc[index] != null) {
             console.log("Updaterouterequest: New Route " + index + " | from " + start + " to " + end);
             deleteRoute(index, function () {
-                startLoc[index] = start;
-                endLoc[index] = end;
-            }
-            );
+                setTimeout(function () {
+                    startLoc[index] = start;
+                    endLoc[index] = end;
+                }, 50);
+            });
         }
     }
 
@@ -1333,11 +1339,9 @@ document.addEventListener("deviceready", function() {
         return Math.floor(Math.random() * Math.floor(max));
     }
 
-    function RemoveRoute(index)
-    {
+    function RemoveRoute(index) {
         console.log("Removing Route: " + index);
         if (index !== null && index > 0) {
-            index++;
             UpdateRouteRequest(index - 1, startLoc[index - 1], endLoc[index]);
             for (var i = index; i < startLoc.length; i++) {
                 if (i == startLoc.length - 1) {
@@ -1363,15 +1367,15 @@ document.addEventListener("deviceready", function() {
             }
             //startLoc[index] = start;
             //endLoc[index] = end;
-            UpdateRouteRequest(index, start, end); 
+            UpdateRouteRequest(index, start, end);
             index++;
             UpdateRouteRequest(index, end, startLoc[index]);
-            
-            for (var j = index; j < saveStartLoc.length + 1;) {
+
+            for (var j = index; j < startLoc.length;) {
                 //startLoc[j] = saveStartLoc[j];
                 //endLoc[j] = saveEndLoc[j]; 
-                j++;                    
-                UpdateRouteRequest(j, saveStartLoc[j-1], saveEndLoc[j-1]);                
+                j++;
+                UpdateRouteRequest(j, saveStartLoc[j - 1], saveEndLoc[j - 1]);
             }
 
             startLoc[startLoc.length] = saveStartLoc[saveStartLoc.length - 1];
