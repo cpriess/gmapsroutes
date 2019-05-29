@@ -37,16 +37,24 @@ var InteractableClusterMarkers = [];
 var ActiveMarker;
 var ActiveMarkerName;
 var redicon = {
-    url: "img/red.png"
+    url: "img/red.png",
+    size: {
+        width: 22,
+        height: 22
+    }
 };
 var blueicon = {
-    url: "img/blue.png"
+    url: "img/blue.png",
+    size: {
+        width: 22,
+        height: 22
+    }
 };
 var arrowicon = {
     url: "img/arrows/arrow2.png",
     size: {
-        width: 18,
-        height: 18
+        width: 22,
+        height: 22
     }
 };
 
@@ -310,8 +318,9 @@ document.addEventListener("deviceready", function() {
         hr1 = document.createElement("hr");
         contents.appendChild(hr1);
 
+        /*
         var ShrinkMarker = document.createElement("img");
-        ShrinkMarker.setAttribute("src", "img/smallpin.png");
+        ShrinkMarker.setAttribute("src", "img/arrows/arrow2.png");
         ShrinkMarker.setAttribute("height", "20");
         ShrinkMarker.setAttribute("width", "20");
         ShrinkMarker.setAttribute("alt", "Shrink");
@@ -324,9 +333,10 @@ document.addEventListener("deviceready", function() {
 
         hr2 = document.createElement("hr");
         contents.appendChild(hr2);
+        */
 
         var GrowMarker = document.createElement("img");
-        GrowMarker.setAttribute("src", "img/pin2.png");
+        GrowMarker.setAttribute("src", "img/shoes.png");
         GrowMarker.setAttribute("height", "35");
         GrowMarker.setAttribute("width", "35");
         GrowMarker.setAttribute("alt", "Grow");
@@ -362,7 +372,7 @@ document.addEventListener("deviceready", function() {
         var posbehind = this.getPointBehindMarker(ClusterMarker);
         var PointBehind = map.addMarker({
             icon: {
-                url: "img/addpoint.png",
+                url: "img/addpoint2.png",
                 size: {
                     width: 20,
                     height: 20
@@ -384,7 +394,7 @@ document.addEventListener("deviceready", function() {
         var posbefore = this.getPointBeforeMarker(ClusterMarker);
         var PointBefore = map.addMarker({
             icon: {
-                url: "img/addpoint.png",
+                url: "img/addpoint2.png",
                 size: {
                     width: 20,
                     height: 20
@@ -531,6 +541,7 @@ document.addEventListener("deviceready", function() {
         });
 		
 		map.on(plugin.google.maps.event.POI_CLICK, function(placeId, name, latLng) {
+            /*
             map.addMarker({
             'position': latLng,
             'title': [
@@ -541,11 +552,14 @@ document.addEventListener("deviceready", function() {
             }, function(marker) {
             marker.showInfoWindow();
             });
+            */
+            console.log("POI_CLICK | placeId:" + placeId + ", name: " + name + ", latlng: " + latLng);
 		});
-		
+
         // Set Routes
         setRoutes();
 
+        /*
         ////////////////////// Rotation
 
         var positions = [
@@ -587,7 +601,7 @@ document.addEventListener("deviceready", function() {
         });
 
         //////////////////////////////////////////
-
+        */
     });
 
     // Button
@@ -662,7 +676,8 @@ document.addEventListener("deviceready", function() {
         map.addPolyline({
             'points': polypoints,
             //'color': '#AA55CC',
-            'color': '#AA00FF',
+            //'color': '#AA00FF', // pink
+            'color': '#2D7C2D', // dark green
             'width': 6,
             'clickable': true
         }, function (thepolyline) {
@@ -705,8 +720,8 @@ document.addEventListener("deviceready", function() {
             });
 
             var PolylineMarkerCluster = [];
-            for (i = 0; i < polypoints.length; i++) {
-                PolylineMarkerCluster[i] = NewPolylineMarkerClusterData(index, i, polypoints);
+            for (i = 1; i < polypoints.length; i++) {
+                PolylineMarkerCluster[i-1] = NewPolylineMarkerClusterData(index, i, polypoints);
             }
             // alert(polypoints.length + " Punkte");
 
@@ -728,10 +743,10 @@ document.addEventListener("deviceready", function() {
                 icons: [{
                     min: 2,
                     max: 100,
-                    url: "img/smallpin.png",
+                    url: "img/red.png",
                     anchor: {
-                        x: 16,
-                        y: 16
+                        x: 11,
+                        y: 11
                     },
                     label: labelOptions
                 },
@@ -771,20 +786,38 @@ document.addEventListener("deviceready", function() {
                 PolylineClusterMarkers[index] = [];
                 InteractableClusterMarkers[index] = [];
                 // Start
+
+                var starticon = {
+                    url: "img/shoes.png",
+                    size: {
+                        width: 40,
+                        height: 40
+                    }
+                };
+                var startanchor = {
+                    x: 20,
+                    y: 20
+                };
+                if (index === 0) {
+                    starticon = {
+                        url: "img/home/home2.png",
+                        size: {
+                            width: 50,
+                            height: 50
+                        }
+                    };
+                    startanchor = {
+                        x: 25,
+                        y: 25
+                    };
+                }
+
                 map.addMarker({
                     position: polypoints[0],
                     draggable: true,
-                    icon: {
-                        url: "img/pin2.png",
-                        size: {
-                            width: 70,
-                            height: 60
-                        }
-                    },
-                    anchor: {
-                        x: 32,
-                        y: 32
-                    }
+                    //animation: plugin.google.maps.Animation.DROP,
+                    icon: starticon,
+                    anchor: startanchor
                 }, function (marker) {
                     Starts[index] = marker;
 
@@ -798,12 +831,41 @@ document.addEventListener("deviceready", function() {
                         
                         setRoutes();
                     });
+
+
+                    var htmlInfoWindow = new plugin.google.maps.HtmlInfoWindow();
+
+                    var contents = document.createElement("div");
+                    contents.setAttribute("style", "text-align:center; margin-right:-10px;");
+
+                    var ShrinkMarker = document.createElement("img");
+                    ShrinkMarker.setAttribute("src", "img/arrows/arrow2.png");
+                    ShrinkMarker.setAttribute("height", "20");
+                    ShrinkMarker.setAttribute("width", "20");
+                    ShrinkMarker.setAttribute("alt", "Shrink");
+                    ShrinkMarker.setAttribute("style", "margin:5px;");
+                    contents.appendChild(ShrinkMarker);
+                    ShrinkMarker.addEventListener("click", function () {
+                        htmlInfoWindow.close();
+                        if (index > 0) index -= 1;
+                        else alert("Sorry but you can't remove the first part of your route");
+                        RemoveRoute(index);
                     });
+
+                    htmlInfoWindow.setContent(contents);
+                    marker.set('infowindow', htmlInfoWindow);
+
+                    marker.on(plugin.google.maps.event.MARKER_CLICK, function () {
+                        htmlInfoWindow.open(marker);
+                    });
+                });
                 if (index === startLoc.length - 1 || startLoc[index + 1] === null || startLoc[index + 1] === 'undefined') {
                     // End
                     map.addMarker({
                         position: polypoints[polypoints.length - 1],
                         draggable: true,
+                        //animation: plugin.google.maps.Animation.DROP,
+                        /*
                         icon: {
                             url: "img/pin2.png",
                             size: {
@@ -811,9 +873,17 @@ document.addEventListener("deviceready", function() {
                                 height: 60
                             }
                         },
+                        */
+                        icon: {
+                            url: "img/raceflag.png",
+                            size: {
+                                width: 60,
+                                height: 60
+                            }
+                        },
                         anchor: {
-                            x: 32,
-                            y: 32
+                            x: 30,
+                            y: 30
                         }
                     }, function (marker) {
                         Ends[index] = marker;
@@ -931,6 +1001,8 @@ document.addEventListener("deviceready", function() {
     function NewPolylineMarkerClusterData(index, i, polypoints) {
         // var active = false;
         // if(ActiveMarkerName != null && ActiveMarkerName == i) { active = true; }
+        var visible = true;
+        if (i == polypoints.length - 1) visible = false;
         return {
             "position": {
                 "lat": polypoints[i].lat,
@@ -938,18 +1010,18 @@ document.addEventListener("deviceready", function() {
             },
             "zIndex": 1,
             "name": i,
-            "icon": arrowicon,
-            /*
+            "icon": arrowicon,            
             "anchor": {
-                "x": 9,
-                "y": 9
-            },
-            */
+                "x": 11,
+                "y": 11
+            },            
+            "animation": plugin.google.maps.Animation.DROP,
             "flat": true,
             "rotation": GetClusterMarkerRotation(i, polypoints),
             "draggable": false,
             "isactive": false,
-            "disableAutoPan": true
+            "disableAutoPan": true,
+            "visible": visible
         };
     }
 
@@ -960,12 +1032,14 @@ document.addEventListener("deviceready", function() {
         return rot;
     }
 
+    var lastRotation = 0;
     function GetClusterMarkerRotation(i, polypoints)
     {
         var rot = 0;
         if (i < polypoints.length - 1) rot = 90 + plugin.google.maps.geometry.spherical.computeHeading({"lat": polypoints[i].lat,"lng": polypoints[i].lng}, {"lat": polypoints[i+1].lat,"lng": polypoints[i+1].lng});
         // last point
-        else rot = 0;
+        else rot = lastRotation;
+        lastRotation = rot;
         return rot;
     }
 
@@ -1137,7 +1211,7 @@ document.addEventListener("deviceready", function() {
         if (PolylinesData != null && PolylinesData.length > 0) {
             var length = 0;
             for (var i = 0; i < PolylinesData.length; i++) {
-                if (PolylinesData[i] != null) {
+                if (PolylinesData[i] != null && Polylines[i] != null) {
                     length += plugin.google.maps.geometry.spherical.computeLength(PolylinesData[i].points);
                 }
             }
@@ -1263,6 +1337,7 @@ document.addEventListener("deviceready", function() {
     {
         console.log("Removing Route: " + index);
         if (index !== null && index > 0) {
+            index++;
             UpdateRouteRequest(index - 1, startLoc[index - 1], endLoc[index]);
             for (var i = index; i < startLoc.length; i++) {
                 if (i == startLoc.length - 1) {
@@ -1292,7 +1367,7 @@ document.addEventListener("deviceready", function() {
             index++;
             UpdateRouteRequest(index, end, startLoc[index]);
             
-            for (var j = index; j < startLoc.length;) {
+            for (var j = index; j < saveStartLoc.length + 1;) {
                 //startLoc[j] = saveStartLoc[j];
                 //endLoc[j] = saveEndLoc[j]; 
                 j++;                    
@@ -1326,11 +1401,11 @@ document.addEventListener("deviceready", function() {
 
 function set_map_options() {
     var maptype = plugin.google.maps.MapTypeId.ROADMAP;
-    if (document.getElementById('maptype').value == "ROADMAP") maptype = plugin.google.maps.MapTypeId.ROADMAP;
-    else if (document.getElementById('maptype').value == "SATELLITE") maptype = plugin.google.maps.MapTypeId.SATELLITE;
-    else if (document.getElementById('maptype').value == "HYBRID") maptype = plugin.google.maps.MapTypeId.HYBRID;
-    else if (document.getElementById('maptype').value == "TERRAIN") maptype = plugin.google.maps.MapTypeId.TERRAIN;
-    else if (document.getElementById('maptype').value == "NONE") maptype = plugin.google.maps.MapTypeId.NONE;
+    if (document.getElementById('maptype').value === "ROADMAP") maptype = plugin.google.maps.MapTypeId.ROADMAP;
+    else if (document.getElementById('maptype').value === "SATELLITE") maptype = plugin.google.maps.MapTypeId.SATELLITE;
+    else if (document.getElementById('maptype').value === "HYBRID") maptype = plugin.google.maps.MapTypeId.HYBRID;
+    else if (document.getElementById('maptype').value === "TERRAIN") maptype = plugin.google.maps.MapTypeId.TERRAIN;
+    else if (document.getElementById('maptype').value === "NONE") maptype = plugin.google.maps.MapTypeId.NONE;
 
     map.setOptions({
         'mapType': maptype,
@@ -1339,7 +1414,7 @@ function set_map_options() {
             'myLocationButton': document.getElementById("MyLocation").checked,
             'indoorPicker': true,
             'zoom': document.getElementById("Zoom").checked,
-            'mapToolbar': false   // currently Android only
+            'mapToolbar': true   // currently Android only
         }
     });
 }
